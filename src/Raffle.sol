@@ -19,7 +19,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
     uint256 private immutable i_interval;
 
     bytes32 private immutable i_gasLane;
-    uint64  private immutable i_subscriptionId;
+    uint256  private immutable i_subscriptionId;
     uint32  private immutable i_callbackGasLimit;
 
     address payable[] private s_players;
@@ -35,7 +35,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
         uint256 interval,
         address vrfCoordinator,
         bytes32 keyHash,
-        uint64 subscriptionId,
+        uint256 subscriptionId,
         uint32 callbackGasLimit
     ) VRFConsumerBaseV2Plus(vrfCoordinator) {
         i_entranceFee = entranceFee;
@@ -110,5 +110,13 @@ contract Raffle is VRFConsumerBaseV2Plus {
 
     function getRaffleState() external view returns (RaffleState) {
         return s_raffleState;
+    }
+
+    function getPlayers(uint256 indexOfPlayers) external view returns (address) {
+        return s_players[indexOfPlayers];
+    }
+
+    function getInterval() external view returns (uint256) {
+        return i_interval;
     }
 }

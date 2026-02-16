@@ -6,23 +6,25 @@ import {Script} from "forge-std/Script.sol";
 // Chainlink VRF v2.5 mock (local testing)
 import {VRFCoordinatorV2_5Mock} from "@chainlink/contracts/src/v0.8/vrf/mocks/VRFCoordinatorV2_5Mock.sol";
 
+import {LinkToken} from "test/mock/LinkToken.sol";
+
 
 abstract contract CODE_CONSTANT {
     uint256 public constant ETH_SEPOLIA_CHAIN_ID = 11155111;
     uint256 public constant ANVIL_LOCAL_CHAIN_ID = 31337;
     uint256 public constant ETH_MAINNET_CHAIN_ID = 1;
-
-    
-    }
+}
 
 contract HelperConfig is CODE_CONSTANT, Script {
+
     struct NetworkConfig {
         uint256 entranceFee;
         uint256 interval;
         address vrfCoordinator;
         bytes32 keyHash;
-        uint64 subscriptionId;
+        uint256 subscriptionId;
         uint32 callbackGasLimit;
+        address link;
     }
 
     // chainId => config
@@ -57,8 +59,10 @@ contract HelperConfig is CODE_CONSTANT, Script {
             interval: 30,
             vrfCoordinator: 0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B, // Sepolia VRF v2.5 coordinator
             keyHash: 0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae,
-            subscriptionId: 0,
-            callbackGasLimit: 500000
+            subscriptionId: 13817975548147589086064026786122285340500494462068847926668188483378530170447,
+            callbackGasLimit: 500000,
+            link: 0x779877A7B0D9E8603169DdbD7836e478b4624789
+
         });
     }
     function getMainnetEth() public pure returns (NetworkConfig memory) {
@@ -68,7 +72,8 @@ contract HelperConfig is CODE_CONSTANT, Script {
             vrfCoordinator: address(0),
             keyHash: bytes32(0),
             subscriptionId: 0,
-            callbackGasLimit: 500000
+            callbackGasLimit: 500000,
+            link: 0x514910771AF9Ca656af840dff83E8264EcF986CA
         });
     }
     function getConfig() public view returns (NetworkConfig memory) {
@@ -100,11 +105,8 @@ contract HelperConfig is CODE_CONSTANT, Script {
             MOCK_WEI_PER_UNIT_LINK
         );
 
-        // 2) Create a subscription on the mock
-        // uint64 subId = coordinator.createSubscription();
+        LinkToken linkToken = new LinkToken();
 
-        // 3) Fund it (mock uses internal accounting; amount is arbitrary)
-        // coordinator.fundSubscription(subId, 10 ether);
 
         vm.stopBroadcast();
 
@@ -115,7 +117,8 @@ contract HelperConfig is CODE_CONSTANT, Script {
             vrfCoordinator: address(coordinator),
             keyHash: bytes32(0),
             subscriptionId: 0,
-            callbackGasLimit: 500000
+            callbackGasLimit: 500000,
+            link: address(linkToken)
         });
 
         return anvilConfig;
