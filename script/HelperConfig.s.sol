@@ -25,6 +25,7 @@ contract HelperConfig is CODE_CONSTANT, Script {
         uint256 subscriptionId;
         uint32 callbackGasLimit;
         address link;
+        address account;
     }
 
     // chainId => config
@@ -44,7 +45,7 @@ contract HelperConfig is CODE_CONSTANT, Script {
         // Sepolia (11155111)
         networkConfigs[ETH_SEPOLIA_CHAIN_ID] = getSepoliaEth();
 
-        // Mainnet (1) - placeholders (fill later)
+        // Mainnet (1) - placeholders
         networkConfigs[ETH_MAINNET_CHAIN_ID] = getMainnetEth();
 
         // Anvil (31337) - deploy mock + create subscription once
@@ -61,7 +62,8 @@ contract HelperConfig is CODE_CONSTANT, Script {
             keyHash: 0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae,
             subscriptionId: 13817975548147589086064026786122285340500494462068847926668188483378530170447,
             callbackGasLimit: 500000,
-            link: 0x779877A7B0D9E8603169DdbD7836e478b4624789
+            link: 0x779877A7B0D9E8603169DdbD7836e478b4624789,
+            account: 0x61B7376F875C43344A8d82fA55783CCA4d0e8CAf 
 
         });
     }
@@ -73,7 +75,8 @@ contract HelperConfig is CODE_CONSTANT, Script {
             keyHash: bytes32(0),
             subscriptionId: 0,
             callbackGasLimit: 500000,
-            link: 0x514910771AF9Ca656af840dff83E8264EcF986CA
+            link: 0x514910771AF9Ca656af840dff83E8264EcF986CA, // Mainnet LINK token
+            account: 0x61B7376F875C43344A8d82fA55783CCA4d0e8CAf
         });
     }
     function getConfig() public view returns (NetworkConfig memory) {
@@ -118,7 +121,8 @@ contract HelperConfig is CODE_CONSTANT, Script {
             keyHash: bytes32(0),
             subscriptionId: 0,
             callbackGasLimit: 500000,
-            link: address(linkToken)
+            link: address(linkToken),
+            account: 0x1804c8AB1F12E6bbf3894d4083f33e07309d1f38
         });
 
         return anvilConfig;

@@ -13,16 +13,16 @@ contract DeployRaffle is Script {
 
         if (chainConfig.subscriptionId == 0) {
             CreateSubsciptions createSubscription = new CreateSubsciptions();
-            (chainConfig.subscriptionId, chainConfig.vrfCoordinator) = createSubscription.createSubscription(chainConfig.vrfCoordinator);
+            (chainConfig.subscriptionId, chainConfig.vrfCoordinator) = createSubscription.createSubscription(chainConfig.vrfCoordinator, chainConfig.account);
 
             FundSubscription fundSubscription = new FundSubscription();
-            fundSubscription.fundSubscription(chainConfig.vrfCoordinator, chainConfig.subscriptionId, chainConfig.link);
+            fundSubscription.fundSubscription(chainConfig.vrfCoordinator, chainConfig.subscriptionId, chainConfig.link, chainConfig.account);
         } 
 
 
 
 
-        vm.startBroadcast();
+        vm.startBroadcast(chainConfig.account);
         // Deploy the contract (replace constructor args to match your Raffle constructor)
         Raffle raffle = new Raffle(
             chainConfig.entranceFee,
@@ -36,7 +36,7 @@ contract DeployRaffle is Script {
 
 
         AddConsumer addConsumer = new AddConsumer();
-        addConsumer.addConsumer(address(raffle), chainConfig.vrfCoordinator, chainConfig.subscriptionId);
+        addConsumer.addConsumer(address(raffle), chainConfig.vrfCoordinator, chainConfig.subscriptionId, chainConfig.account);
 
         return (raffle, helperConfig);
     }

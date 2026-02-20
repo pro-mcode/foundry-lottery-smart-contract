@@ -29,6 +29,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
 
     event PlayerEntered(address indexed player);
     event WinnerPicked(address indexed winner);
+    event RequestedRaffleWinner(uint256 indexed requestId);
 
     constructor(
         uint256 entranceFee,
@@ -85,7 +86,9 @@ contract Raffle is VRFConsumerBaseV2Plus {
             )
         });
 
-        /* uint256 s_requestId = */ s_vrfCoordinator.requestRandomWords(req);
+        uint256 requestId = s_vrfCoordinator.requestRandomWords(req);
+
+        emit RequestedRaffleWinner(requestId);
 
         // NOTE: In V2 Plus, you request via the coordinator wrapper exposed by the base.
         // The exact call name depends on the version you imported.
@@ -118,5 +121,13 @@ contract Raffle is VRFConsumerBaseV2Plus {
 
     function getInterval() external view returns (uint256) {
         return i_interval;
+    }
+
+    function getTimeStamp() external view returns (uint256) {
+        return s_lastTimeStamp;
+    }
+    
+    function getRecentWinner() external view returns (address) {
+        return s_recentWinner;
     }
 }
