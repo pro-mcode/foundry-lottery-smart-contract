@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Foundry Raffle | Premium Front End</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+  <div class="glow glow-3"></div>
+
+  <header class="site-header">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 4L40 12V28L24 44L8 28V12L24 4Z" stroke="currentColor" stroke-width="2" />
+          <path d="M24 12L32 16V24L24 32L16 24V16L24 12Z" stroke="currentColor" stroke-width="2" />
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-title">Foundry Raffle</span>
+        <span class="brand-subtitle">Verifiable premium lottery</span>
+      </div>
+    </div>
+    <nav class="site-nav">
+      <a href="#stats">Stats</a>
+      <a href="#how">How it works</a>
+      <a href="#protocol">Protocol</a>
+      <a href="#config">Config</a>
+    </nav>
+    <div class="header-actions">
+      <button class="btn btn-ghost" id="connectBtn">Connect wallet</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <div class="hero-copy" data-animate>
+        <p class="eyebrow">Chainlink VRF v2.5 + Automation</p>
+        <h1>Premium randomness. On-chain rewards. Zero compromises.</h1>
+        <p class="lead">
+          Enter the raffle with ETH. Chainlink VRF selects a winner. Payouts
+          execute automatically on-chain. Clean UX, clear trust.
+        </p>
+        <div class="cta-row">
+          <button class="btn btn-primary" id="enterHeroBtn">Enter raffle</button>
+          <a class="btn btn-ghost" id="viewContract" href="#" target="_blank" rel="noreferrer">View contract</a>
+        </div>
+        <div class="meta-row">
+          <div class="meta-card">
+            <span class="meta-label">Network</span>
+            <span class="meta-value" id="networkName">Not connected</span>
+          </div>
+          <div class="meta-card">
+            <span class="meta-label">Contract</span>
+            <div class="meta-value meta-contract">
+              <span id="contractShort">Not set</span>
+              <button class="chip" id="copyAddress" type="button">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-panel" data-animate>
+        <div class="card hero-card">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Live round</p>
+              <p class="card-subtitle">Provably fair and non-custodial</p>
+            </div>
+            <span class="pill" id="raffleState">Unknown</span>
+          </div>
+          <div class="pot">
+            <span class="pot-label">Current pot</span>
+            <span class="pot-value" id="potValue">0.00 ETH</span>
+          </div>
+          <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+          <div class="progress-meta">
+            <span>Next draw</span>
+            <span id="nextDraw">--</span>
+          </div>
+          <div class="entry-form">
+            <label for="entryAmount">Entry amount (ETH)</label>
+            <div class="entry-row">
+              <input id="entryAmount" type="number" min="0" step="0.001" inputmode="decimal" />
+              <button class="btn btn-primary" id="enterBtn">Enter</button>
+            </div>
+          </div>
+          <div class="status" id="statusMessage" role="status" aria-live="polite">Connect a wallet to load live data.</div>
+        </div>
+
+        <div class="mini-grid">
+          <div class="card mini-card">
+            <p class="mini-label">Last winner</p>
+            <p class="mini-value" id="recentWinner">--</p>
+            <p class="mini-sub" id="lastDraw">--</p>
+          </div>
+          <div class="card mini-card">
+            <p class="mini-label">Interval</p>
+            <p class="mini-value" id="intervalValue">--</p>
+            <p class="mini-sub">Seconds between draws</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats" id="stats">
+      <div class="section-header" data-animate>
+        <h2>Live protocol stats</h2>
+        <p>Real time state from the deployed contract.</p>
+      </div>
+      <div class="stats-grid">
+        <div class="card stat-card" data-animate>
+          <p class="stat-label">Pool balance</p>
+          <p class="stat-value" id="statPool">0.00 ETH</p>
+          <p class="stat-sub">Contract balance</p>
+        </div>
+        <div class="card stat-card" data-animate>
+          <p class="stat-label">Raffle state</p>
+          <p class="stat-value" id="statState">Unknown</p>
+          <p class="stat-sub">Open or calculating</p>
+        </div>
+        <div class="card stat-card" data-animate>
+          <p class="stat-label">Next draw</p>
+          <p class="stat-value" id="statNext">--</p>
+          <p class="stat-sub">Countdown to draw</p>
+        </div>
+        <div class="card stat-card" data-animate>
+          <p class="stat-label">Last winner</p>
+          <p class="stat-value" id="statWinner">--</p>
+          <p class="stat-sub">Most recent payout</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="how" id="how">
+      <div class="section-header" data-animate>
+        <h2>How it works</h2>
+        <p>Three steps. Fully on-chain. Fully verifiable.</p>
+      </div>
+      <div class="how-grid">
+        <div class="card how-card" data-animate>
+          <span class="step">01</span>
+          <h3>Enter with ETH</h3>
+          <p>Send your entry amount to the raffle contract. Funds pool together instantly.</p>
+        </div>
+        <div class="card how-card" data-animate>
+          <span class="step">02</span>
+          <h3>Automation triggers draw</h3>
+          <p>Chainlink Automation checks timing and conditions, then requests randomness.</p>
+        </div>
+        <div class="card how-card" data-animate>
+          <span class="step">03</span>
+          <h3>VRF selects winner</h3>
+          <p>Chainlink VRF delivers verifiable randomness and the payout executes automatically.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="protocol" id="protocol">
+      <div class="section-header" data-animate>
+        <h2>Protocol guarantees</h2>
+        <p>Built for transparency, trust, and premium UX.</p>
+      </div>
+      <div class="protocol-grid">
+        <div class="card protocol-card" data-animate>
+          <h3>Verifiable randomness</h3>
+          <p>Chainlink VRF v2.5 ensures the winner is unbiased and provable.</p>
+        </div>
+        <div class="card protocol-card" data-animate>
+          <h3>Non-custodial funds</h3>
+          <p>Entries live in the contract. No third party custody. No hidden controls.</p>
+        </div>
+        <div class="card protocol-card" data-animate>
+          <h3>Predictable cadence</h3>
+          <p>Intervals are enforced on-chain. The system draws at consistent cycles.</p>
+        </div>
+        <div class="card protocol-card" data-animate>
+          <h3>Premium interface</h3>
+          <p>Focused layout, quick actions, and elegant clarity for every participant.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="config" id="config">
+      <div class="section-header" data-animate>
+        <h2>Connection config</h2>
+        <p>Point the UI at any deployed raffle contract.</p>
+      </div>
+      <div class="card config-card" data-animate>
+        <div class="config-grid">
+          <div class="field">
+            <label for="contractAddress">Contract address</label>
+            <input id="contractAddress" type="text" spellcheck="false" />
+          </div>
+          <div class="field">
+            <label for="networkSelect">Network</label>
+            <select id="networkSelect">
+              <option value="11155111">Sepolia (11155111)</option>
+              <option value="31337">Localhost (31337)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="defaultEntry">Default entry (ETH)</label>
+            <input id="defaultEntry" type="number" min="0" step="0.001" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="config-actions">
+          <button class="btn btn-secondary" id="refreshBtn">Refresh data</button>
+          <button class="btn btn-ghost" id="switchNetworkBtn">Switch network</button>
+        </div>
+        <p class="config-note">Tip: Update the contract address after each deploy.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div>
+      <p class="footer-title">Foundry Raffle</p>
+      <p class="footer-sub">Premium frontend for the on-chain raffle contract.</p>
+    </div>
+    <p class="footer-note">Powered by Chainlink VRF and Automation. Always verify contract addresses.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.10.0/dist/ethers.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
